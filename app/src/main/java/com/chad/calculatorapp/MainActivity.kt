@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import net.objecthunter.exp4j.ExpressionBuilder
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         //Operator Listeners
         plus_button.setOnClickListener { appendOnClick(false, "+") }
         divide_button.setOnClickListener { appendOnClick(false, "/") }
-        multiply_button.setOnClickListener { appendOnClick(false, "x") }
+        multiply_button.setOnClickListener { appendOnClick(false, "*") }
         minus_button.setOnClickListener { appendOnClick(false, "-") }
         leftbracket_button.setOnClickListener { appendOnClick(false, "(") }
         rightbracket_button.setOnClickListener { appendOnClick(false, ")") }
@@ -44,11 +45,11 @@ class MainActivity : AppCompatActivity() {
     //Method
     private fun appendOnClick(clear: Boolean, string: String) {
         if (clear) {
-            input_textview.text = ""
+            output_textview.text = ""
             input_textview.append(string)
         }else {
             input_textview.append(output_textview.text)
-            output_textview.append(string)
+            input_textview.append(string)
             output_textview.text = ""
         }
     }
@@ -63,6 +64,14 @@ class MainActivity : AppCompatActivity() {
     private fun calculate() {
         try {
             //Expression builder dependency
+            val input = ExpressionBuilder(input_textview.text.toString()).build()
+            val output = input.evaluate()
+            val longOutput = output.toLong()
+            if(output == longOutput.toDouble()) {
+                output_textview.text = longOutput.toString()
+            }else {
+                output_textview.text = output.toString()
+            }
         }catch (e: Exception) {
             Toast.makeText(this@MainActivity, e.message,Toast.LENGTH_LONG).show()
         }
